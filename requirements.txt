@@ -1,0 +1,25 @@
+# =============================================================================
+# requirements.txt — All Python Packages Needed
+# =============================================================================
+# Install everything with one command:
+#   pip install -r requirements.txt
+#
+# What each package does:
+#   langchain              → The core LangChain framework (chains, prompts, etc.)
+#   langchain-community    → Community integrations (PyPDFLoader, ChromaDB, HuggingFace)
+#   langchain-groq         → Groq API integration for ChatGroq class
+#   chromadb               → Vector database (stores embeddings on disk)
+#   sentence-transformers  → HuggingFace embedding model (all-MiniLM-L6-v2)
+#   pypdf                  → Reads PDF files (used by PyPDFLoader)
+#   streamlit              → Web UI framework (chat interface)
+#   python-dotenv          → Reads .env file for API keys
+# =============================================================================
+
+langchain
+langchain-community
+langchain-groq
+chromadb
+sentence-transformers
+pypdf
+streamlit
+python-dotenv
