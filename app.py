@@ -13,7 +13,7 @@ from rag_core import (
     FAISS_DIR
 )
 
-st.set_page_config(page_title="Multi-PDF Multi-PDF Research Assistant", page_icon="🔍", layout="centered")
+st.set_page_config(page_title="Multi-PDF Research Assistant", page_icon="🔍", layout="centered")
 
 st.title("🔍 Multi-PDF Research Assistant")
 st.caption("Multi-PDF · FAISS · Groq LLaMA3.3 70B · LangChain")
