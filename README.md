@@ -1,9 +1,6 @@
 <<<<<<< Updated upstream
 # 🔍 Multi-PDF Research Assistant
 =======
-# 🔍 Multi-PDF Research Assistant
->>>>>>> Stashed changes
-
 A multi-PDF question-answering chatbot built with LangChain, FAISS, Groq LLaMA3.3 70B, and Streamlit.
 
 Upload one or more PDFs and ask questions — the assistant cross-references all documents to give detailed, sourced answers. Conversation memory is maintained across turns, so follow-up questions work naturally.
