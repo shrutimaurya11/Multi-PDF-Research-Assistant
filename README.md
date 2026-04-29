@@ -1,5 +1,5 @@
 <<<<<<< Updated upstream
-# # 📚 Multi-PDF Research Assistant
+# 🔍 Multi-PDF Research Assistant
 =======
 # 🔍 Multi-PDF Research Assistant
 >>>>>>> Stashed changes
