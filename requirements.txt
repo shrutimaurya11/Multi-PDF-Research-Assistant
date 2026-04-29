@@ -1,25 +1,27 @@
 # =============================================================================
 # requirements.txt — All Python Packages Needed
 # =============================================================================
-# Install everything with one command:
-#   pip install -r requirements.txt
+# Install with: pip install -r requirements.txt
 #
-# What each package does:
-#   langchain              → The core LangChain framework (chains, prompts, etc.)
-#   langchain-community    → Community integrations (PyPDFLoader, ChromaDB, HuggingFace)
-#   langchain-groq         → Groq API integration for ChatGroq class
-#   chromadb               → Vector database (stores embeddings on disk)
-#   sentence-transformers  → HuggingFace embedding model (all-MiniLM-L6-v2)
-#   pypdf                  → Reads PDF files (used by PyPDFLoader)
-#   streamlit              → Web UI framework (chat interface)
-#   python-dotenv          → Reads .env file for API keys
+# Package reference:
+#   langchain              → Core LangChain framework (chains, prompts, memory)
+#   langchain-community    → Community integrations (PyPDFLoader, FAISS)
+#   langchain-groq         → Groq API integration for ChatGroq
+#   langchain-huggingface  → HuggingFaceEmbeddings (replaces deprecated community import)
+#   faiss-cpu              → FAISS vector store (local, CPU build)
+#   sentence-transformers  → all-MiniLM-L6-v2 embedding model
+#   pypdf                  → PDF reader used by PyPDFLoader
+#   streamlit              → Web UI framework
+#   python-dotenv          → Reads GROQ_API_KEY from .env
 # =============================================================================
 
-langchain
-langchain-community
-langchain-groq
-chromadb
-sentence-transformers
-pypdf
-streamlit
-python-dotenv
+langchain>=0.3,<0.4
+langchain-community>=0.3,<0.4
+langchain-groq>=0.2,<0.3
+langchain-huggingface>=0.1,<0.2
+faiss-cpu>=1.8,<2.0
+sentence-transformers>=3.0,<4.0
+pypdf>=4.0,<5.0
+streamlit>=1.35,<2.0
+python-dotenv>=1.0,<2.0
+msvc-runtime

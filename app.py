@@ -1,5 +1,5 @@
 # =============================================================================
-# app.py — Multi-PDF Research Assistant UI (Multi-PDF)
+# app.py — Multi-PDF Research Assistant UI
 # =============================================================================
 import streamlit as st
 import os
@@ -18,6 +18,8 @@ st.set_page_config(page_title="Multi-PDF Research Assistant", page_icon="🔍", 
 st.title("🔍 Multi-PDF Research Assistant")
 st.caption("Multi-PDF · FAISS · Groq LLaMA3.3 70B · LangChain")
 
+MAX_FILE_SIZE_MB = 20
+
 with st.sidebar:
     st.header("📂 Upload Documents")
     uploaded_files = st.file_uploader(
@@ -30,34 +32,40 @@ with st.sidebar:
         if not uploaded_files:
             st.warning("Please upload at least one PDF first.")
         else:
-            with st.spinner(f"Indexing {len(uploaded_files)} PDF(s)..."):
-                tmp_paths = []
-                for uf in uploaded_files:
-                    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-                    tmp.write(uf.read())
-                    tmp.close()
-                    tmp_paths.append((tmp.name, uf.name))
-
-                # Rename temp files to original names so metadata is clean
-                renamed_paths = []
-                for tmp_path, orig_name in tmp_paths:
-                    new_path = os.path.join(tempfile.gettempdir(), orig_name)
-                    os.rename(tmp_path, new_path)
-                    renamed_paths.append(new_path)
-
-                vectorstore = load_and_index_pdfs(renamed_paths)
-                st.session_state["chain"] = build_rag_chain(vectorstore)
-                st.session_state["pdf_names"] = [uf.name for uf in uploaded_files]
-
-                for p in renamed_paths:
+            # File size validation — guard against very large uploads
+            oversized = [uf.name for uf in uploaded_files if uf.size > MAX_FILE_SIZE_MB * 1024 * 1024]
+            if oversized:
+                st.error(f"Files exceed {MAX_FILE_SIZE_MB}MB limit: {', '.join(oversized)}")
+            else:
+                with st.spinner(f"Indexing {len(uploaded_files)} PDF(s)..."):
+                    tmp_paths = []
                     try:
-                        os.unlink(p)
-                    except:
-                        pass
+                        for i, uf in enumerate(uploaded_files):
+                            # Prefix with index to avoid collisions if two PDFs share a filename
+                            safe_name = f"{i}_{uf.name}"
+                            tmp_path = os.path.join(tempfile.gettempdir(), safe_name)
+                            with open(tmp_path, "wb") as f:
+                                f.write(uf.read())
+                            tmp_paths.append((tmp_path, uf.name))
 
-            st.success(f"✅ Indexed {len(uploaded_files)} PDF(s)!")
-            for name in st.session_state["pdf_names"]:
-                st.write(f"  📄 {name}")
+                        vectorstore = load_and_index_pdfs([p for p, _ in tmp_paths])
+                        # build_rag_chain creates fresh memory — clears old conversation context
+                        st.session_state["chain"] = build_rag_chain(vectorstore)
+                        st.session_state["pdf_names"] = [uf.name for uf in uploaded_files]
+                        # Clear chat history so old answers don't bleed into the new index
+                        st.session_state["messages"] = []
+
+                    finally:
+                        # Always clean up temp files, even if indexing fails
+                        for tmp_path, _ in tmp_paths:
+                            try:
+                                os.unlink(tmp_path)
+                            except OSError:
+                                pass
+
+                st.success(f"✅ Indexed {len(uploaded_files)} PDF(s)!")
+                for name in st.session_state["pdf_names"]:
+                    st.write(f" 📄 {name}")
 
     st.divider()
     if st.button("⚡ Load Previous Index", use_container_width=True):
@@ -103,8 +111,8 @@ if prompt := st.chat_input("Ask a question about your documents..."):
 if "chain" not in st.session_state:
     st.info("👈 Upload PDFs in the sidebar and click **Index PDFs** to begin.")
     st.markdown("""
-    **💡 Try asking:**
-    - *Am I eligible for this job?*
-    - *What skills from my resume match the job requirements?*
-    - *What skills am I missing?*
-    """)
+**💡 Try asking:**
+- *Am I eligible for this job?*
+- *What skills from my resume match the job requirements?*
+- *What skills am I missing?*
+""")
