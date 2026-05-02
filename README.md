@@ -1,4 +1,4 @@
-<<<<<<< Updated upstream
+
 # 🔍 InsightPDF Research Assistant
 =======
 A multi-PDF question-answering chatbot built with LangChain, FAISS, Groq LLaMA3.3 70B, and Streamlit.
